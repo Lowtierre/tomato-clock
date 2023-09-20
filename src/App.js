@@ -15,7 +15,19 @@ function App() {
 
   useEffect(() => {
     if (play) {
-      const timer = setInterval(() => { countDown() },
+      const timer = setInterval(() => {
+        let newSeconds = seconds - 1;
+        let newMinutes = minutes;
+        if (seconds === 0) {
+          newSeconds = 59;
+          newMinutes = minutes - 1;
+        }
+        setMinutes(newMinutes);
+        setSeconds(newSeconds);
+        if (minutes === 0 && seconds === 0) {
+          changeType();
+        }
+      },
         1000);
       return () => {
         clearInterval(timer);
@@ -32,17 +44,7 @@ function App() {
   }
 
   const countDown = () => {
-    let newSeconds = seconds - 1;
-    let newMinutes = minutes;
-    if (seconds === 0) {
-      newSeconds = 59;
-      newMinutes = minutes - 1;
-    }
-    setMinutes(newMinutes);
-    setSeconds(newSeconds);
-    if (minutes === 0 && seconds === 0) {
-      changeType();
-    }
+
   }
 
   const changeType = () => {
