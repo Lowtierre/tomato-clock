@@ -13,21 +13,23 @@ function App() {
   const [seconds, setSeconds] = useState(0);
   const [play, setPlay] = useState(false);
 
+  const countDown = () => {
+    let newSeconds = seconds - 1;
+    let newMinutes = minutes;
+    if (seconds === 0) {
+      newSeconds = 59;
+      newMinutes = minutes - 1;
+    }
+    setMinutes(newMinutes);
+    setSeconds(newSeconds);
+    if (minutes === 0 && seconds === 0) {
+      changeType();
+    }
+  }
+
   useEffect(() => {
     if (play) {
-      const timer = setInterval(() => {
-        let newSeconds = seconds - 1;
-        let newMinutes = minutes;
-        if (seconds === 0) {
-          newSeconds = 59;
-          newMinutes = minutes - 1;
-        }
-        setMinutes(newMinutes);
-        setSeconds(newSeconds);
-        if (minutes === 0 && seconds === 0) {
-          changeType();
-        }
-      },
+      const timer = setInterval(() => { countDown() },
         1000);
       return () => {
         clearInterval(timer);
@@ -41,10 +43,6 @@ function App() {
     } else {
       setPlay(false);
     }
-  }
-
-  const countDown = () => {
-
   }
 
   const changeType = () => {
