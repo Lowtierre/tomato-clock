@@ -14,6 +14,30 @@ function App() {
   const [play, setPlay] = useState(false);
 
   useEffect(() => {
+
+    const countDown = () => {
+      let newSeconds = seconds - 1;
+      let newMinutes = minutes;
+      if (seconds === 0) {
+        newSeconds = 59;
+        newMinutes = minutes - 1;
+      }
+      setMinutes(newMinutes);
+      setSeconds(newSeconds);
+      if (minutes === 0 && seconds === 0) {
+        changeType();
+      }
+    }
+
+    const changeType = () => {
+      session ? setMinutes(breakTime - 1) : setMinutes(sessionTime - 1);
+      session ? setSession(false) : setSession(true);
+      // const audio = document.getElementById("beep");
+      const audio = new Audio(crazyBitch);
+      audio.setAttribute("id", "beep");
+      audio.play();
+    }
+
     if (play) {
       const timer = setInterval(() => countDown(),
         1000);
@@ -21,7 +45,7 @@ function App() {
         clearInterval(timer);
       }
     }
-  }, [play, seconds]);
+  }, [play, seconds, minutes, breakTime, session, sessionTime]);
 
   const playTimer = () => {
     if (!play) {
@@ -31,28 +55,7 @@ function App() {
     }
   }
 
-  const countDown = () => {
-    let newSeconds = seconds - 1;
-    let newMinutes = minutes;
-    if (seconds === 0) {
-      newSeconds = 59;
-      newMinutes = minutes - 1;
-    }
-    setMinutes(newMinutes);
-    setSeconds(newSeconds);
-    if (minutes === 0 && seconds === 0) {
-      changeType();
-    }
-  }
 
-  const changeType = () => {
-    session ? setMinutes(breakTime - 1) : setMinutes(sessionTime - 1);
-    session ? setSession(false) : setSession(true);
-    // const audio = document.getElementById("beep");
-    const audio = new Audio(crazyBitch);
-    audio.setAttribute("id", "beep");
-    audio.play();
-  }
 
   const resetTimer = () => {
     setSessionTime(25);
@@ -68,40 +71,40 @@ function App() {
         breakTime < 60
           ? setBreakTime(breakTime => breakTime + 1)
           : setBreakTime(breakTime);
-          if (!session){
+        if (!session) {
           breakTime < 60
             ? setMinutes(breakTime => breakTime + 1)
             : setMinutes(breakTime => breakTime)
-          
+
         }
       } else {
         sessionTime < 60
-        ? setSessionTime(sessionTime => sessionTime + 1)
-        : setSessionTime(sessionTime => sessionTime)
+          ? setSessionTime(sessionTime => sessionTime + 1)
+          : setSessionTime(sessionTime => sessionTime)
         if (session) {
           sessionTime < 60
-          ? setMinutes(sessionTime => sessionTime + 1)
-          : setMinutes(sessionTime => sessionTime);
+            ? setMinutes(sessionTime => sessionTime + 1)
+            : setMinutes(sessionTime => sessionTime);
         }
       }
     } else {
       if (name === "Break") {
         breakTime > 0
-        ? setBreakTime(breakTime => breakTime - 1)
-        : setBreakTime(breakTime);
-        if (!session){
+          ? setBreakTime(breakTime => breakTime - 1)
+          : setBreakTime(breakTime);
+        if (!session) {
           breakTime > 0
-          ? setMinutes(breakTime => breakTime - 1)
-          : setMinutes(breakTime => breakTime);
+            ? setMinutes(breakTime => breakTime - 1)
+            : setMinutes(breakTime => breakTime);
         }
       } else {
         sessionTime > 0
-        ? setSessionTime(sessionTime => sessionTime - 1)
-        : setSessionTime(sessionTime => sessionTime)
+          ? setSessionTime(sessionTime => sessionTime - 1)
+          : setSessionTime(sessionTime => sessionTime)
         if (session) {
           sessionTime > 0
-          ? setMinutes(sessionTime => sessionTime - 1)
-          : setMinutes(sessionTime => sessionTime);
+            ? setMinutes(sessionTime => sessionTime - 1)
+            : setMinutes(sessionTime => sessionTime);
         }
       }
     }
@@ -115,11 +118,13 @@ function App() {
             name={"Break"}
             time={breakTime}
             changeTime={changeTime}
+            play={play}
           />
           <Settings
             name={"Session"}
             time={sessionTime}
             changeTime={changeTime}
+            play={play}
           />
         </div>
         <Display
